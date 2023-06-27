@@ -18,8 +18,10 @@ class DDIMSampler(object):
 
     def register_buffer(self, name, attr):
         if type(attr) == torch.Tensor:
-            if attr.device != torch.device("cuda"):
-                attr = attr.to(torch.device("cuda"))
+            #MDL 20230623 - changed 'cuda' to 'mps' in both for apple silicon support
+            if attr.device != torch.device("mps"):
+                #MDL 20230623 - added the float32 conversion as well
+                attr = attr.to(torch.device("mps", torch.float32))
         setattr(self, name, attr)
 
     def make_schedule(self, ddim_num_steps, ddim_discretize="uniform", ddim_eta=0., verbose=True):

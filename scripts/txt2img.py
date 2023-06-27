@@ -245,7 +245,10 @@ def main():
     config = OmegaConf.load(f"{opt.config}")
     model = load_model_from_config(config, f"{opt.ckpt}")
 
-    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    # MDL 20230623 - todo, refine to add torch.backends.mps.is_available() 
+    # and torch.backends.mps.is_initialized() checks
+    # currently swapped in "mps" instead of "cpu" for the default case
+    device = torch.device("cuda") if torch.cuda.is_available() else torch.device("mps")
     model = model.to(device)
 
     if opt.dpm_solver:

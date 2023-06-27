@@ -17,8 +17,9 @@ class PLMSSampler(object):
 
     def register_buffer(self, name, attr):
         if type(attr) == torch.Tensor:
-            if attr.device != torch.device("cuda"):
-                attr = attr.to(torch.device("cuda"))
+            #MDL 20230623 - changed cuda to mps in next 2 lines for apple silicon support
+            if attr.device != torch.device("mps"):
+                attr = attr.to(torch.device("mps"))
         setattr(self, name, attr)
 
     def make_schedule(self, ddim_num_steps, ddim_discretize="uniform", ddim_eta=0., verbose=True):
